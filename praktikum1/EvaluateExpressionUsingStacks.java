@@ -68,9 +68,10 @@ public class EvaluateExpressionUsingStacks {
         		}
         		
         		// current token is an operator
-        		boolean checkOp = tokens[i] == '+' || tokens[i] == '-' || tokens[i] == '*' || tokens[i] == '/';
+        		boolean checkOp = tokens[i] == '+' || tokens[i] == '-' || tokens[i] == '*' || tokens[i] == '/';	
         		if (checkOp) {
-        			while (!ops.isEmpty()) {
+        			// apply the operator if possible
+        			while (!ops.isEmpty() && ops.top() != '(' && ops.top() != ')') {
         				val.push(applyOp(ops.pop(), val.pop(), val.pop()));
         			}
         			
@@ -78,11 +79,13 @@ public class EvaluateExpressionUsingStacks {
         		}
         }
         
-        while (ops.isEmpty()) {
-        		val.push(applyOp(ops.pop(), val.pop(), val.pop()));
+        // all tokens have been parsed
+        while (!ops.isEmpty()) {
+        	// apply the remaining operator to the remaining values
+        	val.push(applyOp(ops.pop(), val.pop(), val.pop()));
         }
         
-        // top of val contains the result, return it
+        // top of val is the result
         return val.pop();
 	}
 }
