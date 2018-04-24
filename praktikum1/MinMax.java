@@ -1,7 +1,7 @@
 package ad.praktikum1;
 
 public class MinMax {
-	public static void minMax(int[] a) {
+	public static int[] minMax(int[] a) {
 		int count = 0;
 		int leng = a.length;
 		
@@ -32,9 +32,6 @@ public class MinMax {
 			count++;
 		}
 		
-		System.out.println("max = " + max);
-		System.out.println("min = " + min);
-		System.out.println(count + " Vergleichen");
-
+		return new int[]{max, min, count};
 	}
 }

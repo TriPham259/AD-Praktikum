@@ -37,6 +37,9 @@ public class EvaluateExpressionUsingStacks {
 	 * @return result of the expression
 	 */
 	public static int evaluate(String expr) {
+		// stop watch for calculating the runtime
+		long startTime = System.nanoTime();
+		
 		// seperate expression into tokens
 		char[] tokens = expr.toCharArray();
 
@@ -96,6 +99,11 @@ public class EvaluateExpressionUsingStacks {
 			// apply the remaining operator(s) to the remaining values
 			val.push(applyOp(ops.pop(), val.pop(), val.pop()));
 		}
+		
+		// end the stop watch
+		long endTime = System.nanoTime();
+        long output = endTime - startTime;
+        System.out.println("elapsed time = " + output + "ns");
 
 		// top of val is the result
 		return val.pop();
