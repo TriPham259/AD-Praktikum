@@ -26,60 +26,32 @@ public class DoubleLinkedList<T> implements ListInterface<T> {
 			throw new IllegalArgumentException();
 		}
 		// list is empty, index must be 0
+		LinkedListNode<T> newNode = new LinkedListNode<T>(data);
 		if (size == 0) {
-			LinkedListNode<T> newNode = new LinkedListNode<T>(data);
 			head = newNode;
 			tail = newNode;
-			size++;
 		} else {
 			// add before head
 			if (index == 0) {
-				addToFront(data);
+				newNode.setNext(head);
+				head.setPrevious(newNode);
+				head = newNode;
 				// add after tail
 			} else if (index == size) {
-				addToBack(data);
+				newNode.setPrevious(tail);
+				tail.setNext(newNode);
+				tail = newNode;
 				// general case
 			} else {
 				LinkedListNode<T> nodeRef = head;
 				for (int i = 0; i < index; i++) {
 					nodeRef = nodeRef.getNext();
 				}
-				LinkedListNode<T> newNode = new LinkedListNode<T>(data, nodeRef.getPrevious(), nodeRef);
+				newNode.setPrevious(nodeRef.getPrevious());
+				newNode.setNext(nodeRef);
 				nodeRef.getPrevious().setNext(newNode);
 				nodeRef.setPrevious(newNode);
-				size++;
 			}
-		}
-	}
-
-	public void addToFront(T data) {
-		if (data == null) {
-			throw new IllegalArgumentException();
-		}
-		if (size != 0) {
-			LinkedListNode<T> a = new LinkedListNode<T>(data, null, head);
-			head.setPrevious(a);
-			head = a;
-		} else {
-			LinkedListNode<T> a = new LinkedListNode<T>(data, null, null);
-			head = a;
-			tail = a;
-		}
-		size++;
-	}
-
-	public void addToBack(T data) {
-		if (data == null) {
-			throw new IllegalArgumentException();
-		}
-		if (size != 0) {
-			LinkedListNode<T> newLinkedNode = new LinkedListNode<T>(data, tail, null);
-			tail.setNext(newLinkedNode);
-			tail = newLinkedNode;
-		} else {
-			LinkedListNode<T> newLinkedNode = new LinkedListNode<T>(data, null, null);
-			tail = newLinkedNode;
-			head = newLinkedNode;
 		}
 		size++;
 	}
@@ -87,85 +59,68 @@ public class DoubleLinkedList<T> implements ListInterface<T> {
 	@Override
 	public T delete(int index) throws IllegalArgumentException {
 		if (index < 0 || index >= size) {
-            throw new IllegalArgumentException();
-        }
-        T data = null;
-        if (index < size - 1 && index > 0) {
-            LinkedListNode<T> nodeRef = head;
-            for (int i = 0; i < index; i++) {
-            	nodeRef = nodeRef.getNext();
-            }
-            nodeRef.getPrevious().setNext(nodeRef.getNext());
-            nodeRef.getNext().setPrevious(nodeRef.getPrevious());
-            data = nodeRef.getData();
-            size--;
-        } else if (index == 0) {
-            data = deleteFromFront();
-        } else if (index == size - 1) {
-            data = deleteFromBack();
-        }
-        return data;
-	}
-
-	public T deleteFromFront() {
+			throw new IllegalArgumentException();
+		}
+		// list is empty, nothing to delete
 		if (size == 0) {
 			return null;
 		}
 		T data;
+		// list has only 1 element to delete
 		if (size == 1) {
 			data = head.getData();
 			head = null;
 			tail = null;
 		} else {
-			data = head.getData();
-			head.getNext().setPrevious(null);
-			head = head.getNext();
+			// delete before front
+			if (index == 0) {
+				data = head.getData();
+				head.getNext().setPrevious(null);
+				head = head.getNext();
+			// delete after tail
+			} else if (index == size - 1) {
+				data = tail.getData();
+				tail.getPrevious().setNext(null);
+				tail = tail.getPrevious();
+			// general case
+			} else {
+				LinkedListNode<T> nodeRef = head;
+				for (int i = 0; i < index; i++) {
+					nodeRef = nodeRef.getNext();
+				}
+				nodeRef.getPrevious().setNext(nodeRef.getNext());
+				nodeRef.getNext().setPrevious(nodeRef.getPrevious());
+				data = nodeRef.getData();
+
+			}
 		}
 		size--;
 		return data;
 	}
 
-	public T deleteFromBack() {
-		if (size == 0) {
-			return null;
-		}
-		T object;
-		if (size == 1) {
-			object = head.getData();
-			head = null;
-			tail = null;
-		} else {
-			object = tail.getData();
-			tail.getPrevious().setNext(null);
-			tail = tail.getPrevious();
-		}
-		size--;
-		return object;
-	}
-
 	@Override
 	public T get(int index) throws IllegalArgumentException {
 		if (index < 0 || index >= size) {
-            throw new IllegalArgumentException();
-        }
-        if (index == 0) {
-            return head.getData();
-        }
-        if (index == size - 1) {
-            return tail.getData();
-        }
-        LinkedListNode<T> nodeRef = head;
-        for (int i = 0; i < index; i++) {
-            nodeRef = nodeRef.getNext();
-        }
-        return nodeRef.getData();
+			throw new IllegalArgumentException();
+		}
+		if (index == 0) {
+			return head.getData();
+		}
+		if (index == size - 1) {
+			return tail.getData();
+		}
+		LinkedListNode<T> nodeRef = head;
+		for (int i = 0; i < index; i++) {
+			nodeRef = nodeRef.getNext();
+		}
+		return nodeRef.getData();
 	}
 
 	@Override
 	public void empty() {
 		head = null;
-        tail = null;
-        size = 0;
+		tail = null;
+		size = 0;
 	}
 
 	@Override
