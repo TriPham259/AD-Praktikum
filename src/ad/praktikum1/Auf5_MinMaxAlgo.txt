@@ -1,0 +1,18 @@
+MinMax-Algorithmus für ein Feld der Länge n a[0..n-1]
+1. Zerlege das Feld in zwei Halbe: 'kleiner Halbe', wo min steht 
+und 'größere Halbe', wo max steht
+	für i = 0 bis n / 2
+		falls a[i] >= a[n-i-1]
+			tausche a[i] und a[n-i-1]
+
+2. Suche nach min in der 'kleinere Halbe' des Feld
+	für i = 0 bis n / 2
+		falls a[i] < min
+			setze min = a[i]
+
+3. Suche nach max in der 'größere Halbe' des Feld
+	für i = n - 1 bis n / 2 + 1
+		falls a[i] > max
+			setze max = a[i]
+
+Insgesamt (n/2+1) + (n/2+1) + (n/2-1) = 1.5n +1 Vergleichen (<2n)
