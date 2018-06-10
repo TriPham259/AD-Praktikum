@@ -75,9 +75,8 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 		for (int i = left; i < right; i++) {
 			res.addKeyValPair(i - left, getKeyValPair(i));
 			res.setChild(i - left, getChild(i));
-			
 		}
-		res.setChild(right - left + 1, getChild(right));
+		res.setChild(right - left, getChild(right));
 
 		return res;
 	}
@@ -155,7 +154,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	/**
 	 * Setzt den Elternknoten.
 	 */
-	private void setParent(BBaumKnoten<K, V> knoten) {
+	public void setParent(BBaumKnoten<K, V> knoten) {
 		parent = knoten;
 	}
 
@@ -283,12 +282,22 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 
 	@Override
 	public String toString() {
-		String ergebnis = "(" + ((child.get(0) != null) ? " " + child.get(0) + " " : "") + ")";
+		String ergebnis = "(" + ((getChild(0) != null) ? " " + getChild(0) + " " : "") + ")";
 		for (int i = 0; i < keyValPair.size(); i++) {
-			ergebnis += keyValPair.get(i).getKey() + "";
-			ergebnis += "(" + ((child.get(i + 1) != null) ? " " + child.get(i + 1) + " " : "") + ")";
+			ergebnis += getKeyValPair(i).getKey() + "";
+			ergebnis += "(" + ((getChild(i + 1) != null) ? " " + getChild(i + 1) + " " : "") + ")";
 		}
 		ergebnis += "";
 		return ergebnis;
 	}
+	
+//	public String toString() {
+//		String ergebnis = "(" + ((child.get(0) != null) ? " " + child.get(0) + " " : "") + ")";
+//		for (int i = 0; i < keyValPair.size(); i++) {
+//			ergebnis += keyValPair.get(i).getKey() + "";
+//			ergebnis += "(" + ((child.get(i + 1) != null) ? " " + child.get(i + 1) + " " : "") + ")";
+//		}
+//		ergebnis += "";
+//		return ergebnis;
+//	}
 }

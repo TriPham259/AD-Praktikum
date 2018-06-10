@@ -155,66 +155,96 @@ public abstract class BBaum<K extends Comparable<K>, V> {
 			return root;
 		}
 
-		//Stack ancestors = new LinkedStack();
+		// Stack ancestors = new LinkedStack();
 		BBaumKnoten<K, V> curr = root;
 		for (;;) {
 			// position of insertPair in current node
 			int currPos = curr.searchInNode(insertPair);
 
 			// don't add duplicate
-//			if (insertPair.equals(curr.getKeyValPair(currPos))) {
-//				return root;
-//			}
-			
+			// if (insertPair.equals(curr.getKeyValPair(currPos))) {
+			// return root;
+			// }
+
 			// if position of insertion is in a leaf -> insert
 			if (curr.isLeaf()) {
 				curr.addKeyValPair(currPos, insertPair);
-				
+
 				// if current node becomes overflowed
 				if (curr.size() > maxNodeSize()) {
-					splitNode(curr);				
+					splitNode(curr);
 				}
 				return root;
-			} 
-			else {
-//				ancestors.addLast(new Integer(currPos));
-//				ancestors.addLast(curr);
+			} else {
+				// ancestors.addLast(new Integer(currPos));
+				// ancestors.addLast(curr);
 				// traverse down to a child (until reaching a leaf)
 				curr = curr.getChild(currPos);
 			}
 		}
 
-		// return root;
+//		 return root;
 	}
 
-	
-	//public void splitNode(BBaumKnoten<K, V> parent, BBaumKnoten<K, V> node) {
+//	public void splitNode(BBaumKnoten<K, V> parent, BBaumKnoten<K, V> node) {
 	public void splitNode(BBaumKnoten<K, V> node) {
 		// seperate current node into 3 parts
 		int medPos = node.size() / 2;
 		KeyValuePair<K, V> med = node.getKeyValPair(medPos);
-		BBaumKnoten<K, V> left = node.subNode(0, medPos);
-		BBaumKnoten<K, V> right = node.subNode(medPos + 1, node.size());
+		BBaumKnoten<K, V> leftSubNode = node.subNode(0, medPos);
+		BBaumKnoten<K, V> rightSubNode = node.subNode(medPos + 1, node.size());
 
 		// if root node is to be split
 		if (node == root) {
 			// set med as new root
 			root = new BBaumKnoten<>(med);
-			
+
 			// set left and right as its two children
-			root.setChild(0, left);
-			root.setChild(1, right);
+			root.setChild(0, leftSubNode);
+			root.setChild(1, rightSubNode);
 		} else {
-			BBaumKnoten<K, V> parent = node.getParent();
+			BBaumKnoten<K, V> parent = node.getParent();     // getParent() -> null
+//			node.setParent(parent);
 			
-			// push med into parent and make 'left' and 'right' its children
-			parent.insertKeyChild(left, med, right);
-			
+			// push med into parent and make leftSubNode and rightSubNode its children
+			parent.insertKeyChild(leftSubNode, med, rightSubNode);
+
 			// if parent becomes overflowed, split again
 			if (parent.size() > maxNodeSize()) {
-				//splitNode(parent.getParent(), parent);
+				// splitNode(parent.getParent(), parent);
 				splitNode(parent);
 			}
 		}
+	}
+
+	public static void main(String[] args) {
+		BBaum<Integer, String> baum = new BBaum<Integer, String>(2) {
+		};
+
+		baum.insert(23, "23");
+		System.out.println(baum); 
+		System.out.println(baum.numOfKeys());
+		
+		baum.insert(42, "42");
+		System.out.println(baum);
+		System.out.println(baum.numOfKeys());
+		
+//		System.out.println(baum.printPreOrder());
+		
+		baum.insert(12, "12");
+//		System.out.println(baum);
+		System.out.println(baum.numOfKeys());
+		
+		baum.insert(25, "25");
+		System.out.println(baum);
+		
+		baum.insert(20, "20");
+		System.out.println(baum);
+		
+		baum.insert(11, "11");
+		System.out.println(baum);
+		
+		baum.insert(24, "24");
+		System.out.println(baum);
 	}
 }
