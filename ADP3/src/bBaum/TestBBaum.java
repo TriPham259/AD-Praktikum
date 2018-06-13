@@ -1,14 +1,7 @@
+package bBaum;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-
-
-
-//muss angepasst werden!!!
-//import SortierAlgorithmus;
-//import BBaumLoesung;
-
-
 
 import java.util.List;
 
@@ -18,15 +11,13 @@ import static org.junit.Assert.assertTrue;
 /**
 * Testklasse für die BBaum-Implementierung.
 */
-public class TestBTree {
+public class TestBBaum {
 
   /**
    * Mit dieser Instanz wird getestet.
    */
   // TODO: Legen Sie hier eine Instanz Ihrer Implementierung an.
-  private BBaum<Integer, String> baum = //null;
-          new BBaum<Integer, String>(2) {
-		};
+  private BBaum<Integer, String> baum = new BBaum<Integer, String>(2);
 
   @Test
   public void testEinfuegen() {

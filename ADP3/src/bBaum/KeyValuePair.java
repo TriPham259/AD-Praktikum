@@ -1,4 +1,4 @@
-
+package bBaum;
 
 /**
  * Repräsentation eines Schlüssel-Wert-Paares.

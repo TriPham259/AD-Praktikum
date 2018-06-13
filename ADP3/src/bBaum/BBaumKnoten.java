@@ -1,3 +1,4 @@
+package bBaum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,41 +12,35 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	/**
 	 * Array von Schlüsseln (t-1 bis 2t-2)
 	 */
-	private List<KeyValuePair<K, V>> keyValPair = new ArrayList<>();
+	private List<KeyValuePair<K, V>> keyValPairs;
 
 	/**
 	 * Array von Referenzen auf Kindknoten (t bis 2*t-1)
 	 */
-	private List<BBaumKnoten<K, V>> child;
+	private List<BBaumKnoten<K, V>> children;
 
 	/**
-	 * Referenz auf den Elternknoten, null beim Wurzelknoten
+	 * Referenz auf den Elternknoten
 	 */
-	private BBaumKnoten<K, V> parent = null;
+	private BBaumKnoten<K, V> parent;
 
-	/**
-	 * Construct a B-tree node initially with one element and two children.
-	 * 
-	 * @param element
-	 *            ein Schluessel-Wert-Paar
-	 */
 	public BBaumKnoten(KeyValuePair<K, V> element) {
-		keyValPair = new ArrayList<KeyValuePair<K, V>>();
-		keyValPair.add(element);
+		keyValPairs = new ArrayList<KeyValuePair<K, V>>();
+		keyValPairs.add(element);
 
 		// 2 Kinder
-		child = new ArrayList<>();
-		child.add(null);
-		child.add(null);
+		children = new ArrayList<>();
+		children.add(null);
+		children.add(null);
 	}
 
 	/**
 	 * Überprüfen, ob Knoten einer Blattknoten ist (bzw. hat keine Kindknoten).
-	 * @return fasch, wenn der Knoten mindestens einen nicht-null Kindknoten hat,
+	 * @return falsch, wenn der Knoten mindestens einen nicht-null Kindknoten hat,
 	 * sonst wahr.
 	 */
 	public boolean isLeaf() {
-		for (BBaumKnoten<K, V> child : child) {
+		for (BBaumKnoten<K, V> child : children) {
 			if (child != null) {
 				return false;
 			}
@@ -57,14 +52,14 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * Liefert die Anzahl der Schlüssel im Knoten.
 	 */
 	public int size() {
-		return keyValPair.size();
+		return keyValPairs.size();
 	}
 	
 	/**
 	 * Liefert die Anzahl der Kindknoten
 	 */
-	public int numOfChilds() {
-		return child.size();
+	public int numOfChildren() {
+		return children.size();
 	}
 
 
@@ -93,18 +88,18 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * null-Kindknoten-Referenz ein.
 	 */
 	public void addKeyValPair(int index, KeyValuePair<K, V> element) {
-		if (keyValPair.size() == 0) {
-			child.add(null);
+		if (keyValPairs.size() == 0) {
+			children.add(null);
 		}
-		keyValPair.add(index, element);
-		child.add(index, null);
+		keyValPairs.add(index, element);
+		children.add(index, null);
 	}
 
 	/**
 	 * Liefert den Schlüssel an dem gegebenen Index.
 	 */
 	public KeyValuePair<K, V> getKeyValPair(int index) {
-		return keyValPair.get(index);
+		return keyValPairs.get(index);
 	}
 
 	/**
@@ -118,7 +113,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * Liefert das Kind am gegebenen Index.
 	 */
 	public BBaumKnoten<K, V> getChild(int index) {
-		return child.get(index);
+		return children.get(index);
 	}
 
 	/**
@@ -143,6 +138,12 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 		}
 		addKeyValPair(index, teiler);
 		setChild(index, linkerKnoten);
+		
+		children.add(getChild(numOfChildren() - 1));
+		for (int i = numOfChildren() - 2; i > index + 2; i--) {
+			setChild(i, getChild(i - 1));
+		}
+		
 		setChild(index + 1, rechterKnoten);
 	}
 
@@ -151,7 +152,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * kein Hinzufügen.
 	 */
 	public void setChild(int index, BBaumKnoten<K, V> knoten) {
-		child.set(index, knoten);
+		children.set(index, knoten);
 		if (knoten != null) {
 			knoten.setParent(this);
 		}
@@ -187,74 +188,58 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 				l = m + 1;
 		}
 		return l;
-		
-//		int index = -1;
-//		if (target.getKey().compareTo(getKeyValPair(0).getKey()) < 0) {
-//			index = 0;
-//		} else if (target.getKey().compareTo(getKeyValPair(size() - 1).getKey()) > 0) {
-//			index = size() - 1;
-//		} else {
-//			for (int i = 0; i < size() - 1; i++) {
-//				if (target.getKey().compareTo(getKeyValPair(i + 1).getKey()) < 0) {
-//					index = i + 1;
-//					break;
-//				}
-//			}
-//		}
-//		
-//		return index;
 	}
 
 	/**
 	 * Validiert den Knoten (Konsistenzprüfung). Liefert wahr, wenn der Knoten
-	 * valide ist. (!!!!!)
+	 * valide ist.
 	 */
 	public boolean validate(int ordnung) {
 		// Schlüssel
-		if (keyValPair.size() < ordnung - 1 || keyValPair.size() > ordnung * 2 - 1) {
+		if (keyValPairs.size() < ordnung - 1 || keyValPairs.size() > ordnung * 2 - 1) {
 			System.out.println("Validierung fehlgeschlagen: ungültige Schlüsselanzahl");
 			return false;
 		}
 
 		// Kinder
-		if (child.size() != keyValPair.size() + 1) {
+		if (children.size() != keyValPairs.size() + 1) {
 			System.out.println("Validierung fehlgeschlagen: ungültige Kindknotenanzahl");
 			return false;
 		}
 
 		// Schlüsselreihenfolge
-		for (int i = 0; i < keyValPair.size() - 1; i++) {
-			if (keyValPair.get(i).getKey().compareTo(keyValPair.get(i + 1).getKey()) > 0) {
+		for (int i = 0; i < keyValPairs.size() - 1; i++) {
+			if (keyValPairs.get(i).getKey().compareTo(keyValPairs.get(i + 1).getKey()) > 0) {
 				System.out.println("Validierung fehlgeschlagen: Schlüsselreihenfolge falsch");
 				return false;
 			}
 		}
 
 		// Position der Kinder
-		if (keyValPair.size() > 0) {
-			if (child.get(0) != null) {
+		if (keyValPairs.size() > 0) {
+			if (children.get(0) != null) {
 				// Größter Schlüssel des ersten Kindes muss kleiner als erster Schlüssel sein.
-				if (child.get(0).getKeyValPair(child.get(0).size() - 1).getKey()
-						.compareTo(keyValPair.get(0).getKey()) > 0) {
+				if (children.get(0).getKeyValPair(children.get(0).size() - 1).getKey()
+						.compareTo(keyValPairs.get(0).getKey()) > 0) {
 					System.out.println("Kind " + 0 + " passt nicht in den Schlüsselbereich.");
 					return false;
 				}
 			}
-			if (child.get(child.size() - 1) != null) {
+			if (children.get(children.size() - 1) != null) {
 				// Kleinster Schlüssel des letzten Kindes muss größer sein als letzter
 				// Schlüssely
-				if (child.get(child.size() - 1).getKeyValPair(0).getKey()
-						.compareTo(keyValPair.get(keyValPair.size() - 1).getKey()) < 0) {
-					System.out.println("Kind " + (child.size() - 1) + " passt nicht in den Schlüsselbereich.");
+				if (children.get(children.size() - 1).getKeyValPair(0).getKey()
+						.compareTo(keyValPairs.get(keyValPairs.size() - 1).getKey()) < 0) {
+					System.out.println("Kind " + (children.size() - 1) + " passt nicht in den Schlüsselbereich.");
 					return false;
 				}
 			}
-			for (int i = 0; i < keyValPair.size() - 1; i++) {
-				K schluesselLinks = keyValPair.get(i).getKey();
-				K schluesselRechts = keyValPair.get(i + 1).getKey();
-				if (child.get(i) != null) {
-					K kindSchluesselMin = child.get(i + 1).getKeyValPair(0).getKey();
-					K kindSchluesselMax = child.get(i + 1).getKeyValPair(child.get(i).size() - 1).getKey();
+			for (int i = 0; i < keyValPairs.size() - 1; i++) {
+				K schluesselLinks = keyValPairs.get(i).getKey();
+				K schluesselRechts = keyValPairs.get(i + 1).getKey();
+				if (children.get(i) != null) {
+					K kindSchluesselMin = children.get(i + 1).getKeyValPair(0).getKey();
+					K kindSchluesselMax = children.get(i + 1).getKeyValPair(children.get(i).size() - 1).getKey();
 					if (kindSchluesselMin.compareTo(schluesselLinks) < 0) {
 						System.out.println("Kind " + i + " passt nicht in den Schlüsselbereich.");
 						return false;
@@ -268,7 +253,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 		}
 
 		// Prüfe Kindknoten
-		for (BBaumKnoten<K, V> kind : child) {
+		for (BBaumKnoten<K, V> kind : children) {
 			if (kind != null) {
 				if (!kind.validate(ordnung)) {
 					return false;
@@ -282,7 +267,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	@Override
 	public String toString() {
 		String ergebnis = "(" + ((getChild(0) != null) ? " " + getChild(0) + " " : "") + ")";
-		for (int i = 0; i < keyValPair.size(); i++) {
+		for (int i = 0; i < keyValPairs.size(); i++) {
 			ergebnis += getKeyValPair(i).getKey() + "";
 			ergebnis += "(" + ((getChild(i + 1) != null) ? " " + getChild(i + 1) + " " : "") + ")";
 		}
@@ -290,13 +275,4 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 		return ergebnis;
 	}
 	
-//	public String toString() {
-//		String ergebnis = "(" + ((child.get(0) != null) ? " " + child.get(0) + " " : "") + ")";
-//		for (int i = 0; i < keyValPair.size(); i++) {
-//			ergebnis += keyValPair.get(i).getKey() + "";
-//			ergebnis += "(" + ((child.get(i + 1) != null) ? " " + child.get(i + 1) + " " : "") + ")";
-//		}
-//		ergebnis += "";
-//		return ergebnis;
-//	}
 }

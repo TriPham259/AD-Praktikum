@@ -1,8 +1,8 @@
+package bBaum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.apache.dts.BBaumKnoten;
 
 /**
  * Basisklasse für einen B-Baum von (sortierbaren) Elementen vom Typ T.
@@ -71,7 +71,7 @@ public class BBaum<K extends Comparable<K>, V> {
 		if (node == null) {
 			return null;
 		}
-		// iterate through all KV-Pairs in knoten
+		// iterate through all KV-Pairs in node
 		for (int i = 0; i < node.size(); i++) {
 			KeyValuePair<K, V> key_val = node.getKeyValPair(i);
 
@@ -82,7 +82,7 @@ public class BBaum<K extends Comparable<K>, V> {
 			}
 		}
 
-		return getValFromKey(key, node.getChild(node.numOfChilds() - 1));
+		return getValFromKey(key, node.getChild(node.numOfChildren() - 1));
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class BBaum<K extends Comparable<K>, V> {
 			return 0;
 		}
 		int anzahlSchluessel = node.size();
-		for (int i = 0; i < node.numOfChilds(); i++) {
+		for (int i = 0; i < node.numOfChildren(); i++) {
 			anzahlSchluessel += numOfKeys(node.getChild(i));
 		}
 		return anzahlSchluessel;
@@ -137,14 +137,13 @@ public class BBaum<K extends Comparable<K>, V> {
 	}
 
 	/**
-	 * Fügt das Element in den Knoten ein. Liefert den neuen Wurzelknoten des Baumes
-	 * zurück.
-	 *
+	 * Fügt das Element in den Knoten ein. 
 	 * @param key
 	 *            Schlüssel des Elementes, das in den aktuellen Knoten eingefügt
 	 *            werden soll
-	 * @param wert
+	 * @param value
 	 *            Wert des Elementes.
+	 * @return den neuen Wurzelknoten des Baumes
 	 */
 	public BBaumKnoten<K, V> insert(K key, V value) {
 		KeyValuePair<K, V> insertPair = new KeyValuePair<K, V>(key, value);
@@ -155,16 +154,10 @@ public class BBaum<K extends Comparable<K>, V> {
 			return root;
 		}
 
-		// Stack ancestors = new LinkedStack();
 		BBaumKnoten<K, V> curr = root;
 		for (;;) {
 			// position of insertPair in current node
 			int currPos = curr.searchInNode(insertPair);
-
-			// don't add duplicate
-			// if (insertPair.equals(curr.getKeyValPair(currPos))) {
-			// return root;
-			// }
 
 			// if position of insertion is in a leaf -> insert
 			if (curr.isLeaf()) {
@@ -176,21 +169,15 @@ public class BBaum<K extends Comparable<K>, V> {
 				}
 				return root;
 			} else {
-				// ancestors.addLast(new Integer(currPos));
-				// ancestors.addLast(curr);
 				// traverse down to a child (until reaching a leaf)
 				curr = curr.getChild(currPos);
 			}
 		}
-
-//		 return root;
 	}
 
 	/**
 	 * Split the current node, push the middle element into its parent node
-	 * @param node
 	 */
-//	public void splitNode(BBaumKnoten<K, V> parent, BBaumKnoten<K, V> node) {
 	public void splitNode(BBaumKnoten<K, V> node) {
 		// seperate current node into 3 parts
 		int medPos = node.size() / 2;
@@ -203,52 +190,49 @@ public class BBaum<K extends Comparable<K>, V> {
 			// set med as new root
 			root = new BBaumKnoten<>(med);
 
-			// set left and right as its two children
+			// set leftSubNode and rightSubNode as its two children
 			root.setChild(0, leftSubNode);
 			root.setChild(1, rightSubNode);
 		} else {
-			BBaumKnoten<K, V> parent = node.getParent();     // getParent() -> null
-//			node.setParent(parent);
+			BBaumKnoten<K, V> parent = node.getParent();
 			
 			// push med into parent and make leftSubNode and rightSubNode its children
 			parent.insertKeyChild(leftSubNode, med, rightSubNode);
 
 			// if parent becomes overflowed, split again
 			if (parent.size() > maxNodeSize()) {
-				// splitNode(parent.getParent(), parent);
 				splitNode(parent);
 			}
 		}
 	}
 
-	public static void main(String[] args) {
-		BBaum<Integer, String> baum = new BBaum<Integer, String>(2) {
-		};
-
-		baum.insert(23, "23");
-		System.out.println(baum); 
-		System.out.println(baum.numOfKeys());
-		
-		baum.insert(42, "42");
-		System.out.println(baum);
-		System.out.println(baum.numOfKeys());
-		
-//		System.out.println(baum.printPreOrder());
-		
-		baum.insert(12, "12");
+//	public static void main(String[] args) {
+//		BBaum<Integer, String> baum = new BBaum<Integer, String>(2);
+//
+//		baum.insert(23, "23");
+//		System.out.println(baum); 
+//		System.out.println(baum.numOfKeys());
+//		
+//		baum.insert(42, "42");
 //		System.out.println(baum);
-		System.out.println(baum.numOfKeys());
-		
-		baum.insert(25, "25");
-		System.out.println(baum);
-		
-		baum.insert(20, "20");
-		System.out.println(baum);
-		
-		baum.insert(11, "11");
-		System.out.println(baum);
-		
-		baum.insert(24, "24");
-		System.out.println(baum);
-	}
+//		System.out.println(baum.numOfKeys());
+//		
+//		System.out.println(baum.printPreOrder());
+//		
+//		baum.insert(12, "12");
+//		System.out.println(baum);
+//		System.out.println(baum.numOfKeys());
+//		
+//		baum.insert(25, "25");
+//		System.out.println(baum);
+//		
+//		baum.insert(20, "20");
+//		System.out.println(baum);
+//		
+//		baum.insert(11, "11");
+//		System.out.println(baum);
+//		
+//		baum.insert(24, "24");
+//		System.out.println(baum);
+//	}
 }
