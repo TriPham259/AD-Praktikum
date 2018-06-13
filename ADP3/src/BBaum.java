@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Basisklasse für einen B-Baum von (sortierbaren) Elementen vom Typ T.
  */
-public abstract class BBaum<K extends Comparable<K>, V> {
+public class BBaum<K extends Comparable<K>, V> {
 	/**
 	 * Wurzelknoten des BBaum
 	 */
@@ -24,7 +24,7 @@ public abstract class BBaum<K extends Comparable<K>, V> {
 	}
 
 	/**
-	 * maximum number of key-value-pairs in a node
+	 * maximum number of key-value-pairs in a node 
 	 */
 	public int maxNodeSize() {
 		return 2 * deg - 2;
@@ -186,6 +186,10 @@ public abstract class BBaum<K extends Comparable<K>, V> {
 //		 return root;
 	}
 
+	/**
+	 * Split the current node, push the middle element into its parent node
+	 * @param node
+	 */
 //	public void splitNode(BBaumKnoten<K, V> parent, BBaumKnoten<K, V> node) {
 	public void splitNode(BBaumKnoten<K, V> node) {
 		// seperate current node into 3 parts

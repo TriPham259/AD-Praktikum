@@ -41,7 +41,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 
 	/**
 	 * Überprüfen, ob Knoten einer Blattknoten ist (bzw. hat keine Kindknoten).
-	 * Liefert wahr, wenn der Knoten mindestens einen nicht-null Kindknoten hat,
+	 * @return fasch, wenn der Knoten mindestens einen nicht-null Kindknoten hat,
 	 * sonst wahr.
 	 */
 	public boolean isLeaf() {
@@ -59,15 +59,21 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	public int size() {
 		return keyValPair.size();
 	}
+	
+	/**
+	 * Liefert die Anzahl der Kindknoten
+	 */
+	public int numOfChilds() {
+		return child.size();
+	}
+
 
 	/**
 	 * Extract from current node the pairs that have index within left..(right-1)
 	 * and children index in left..right
 	 * 
-	 * @param left
-	 *            index lower bound
-	 * @param right
-	 *            index strict upper bound
+	 * @param left index lower bound
+	 * @param right index strict upper bound
 	 * @return subnode
 	 */
 	public BBaumKnoten<K, V> subNode(int left, int right) {
@@ -156,13 +162,6 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 */
 	public void setParent(BBaumKnoten<K, V> knoten) {
 		parent = knoten;
-	}
-
-	/**
-	 * Liefert die Anzahl der Kindknoten
-	 */
-	public int numOfChilds() {
-		return child.size();
 	}
 
 	/**
