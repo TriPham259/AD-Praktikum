@@ -23,6 +23,11 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * Referenz auf den Elternknoten
 	 */
 	private BBaumKnoten<K, V> parent;
+	
+	public BBaumKnoten() {
+		keyValPairs = new ArrayList<KeyValuePair<K, V>>();
+		children = new ArrayList<>();
+	}
 
 	public BBaumKnoten(KeyValuePair<K, V> element) {
 		keyValPairs = new ArrayList<KeyValuePair<K, V>>();
@@ -46,6 +51,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 			}
 		}
 		return true;
+//		return children.isEmpty();
 	}
 
 	/**
@@ -72,7 +78,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	 * @return subnode
 	 */
 	public BBaumKnoten<K, V> subNode(int left, int right) {
-		BBaumKnoten<K, V> res = new BBaumKnoten<>(null);
+		BBaumKnoten<K, V> res = new BBaumKnoten<>();
 		for (int i = left; i < right; i++) {
 			res.addKeyValPair(i - left, getKeyValPair(i));
 			res.setChild(i - left, getChild(i));
@@ -127,7 +133,7 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 		if (teiler.getKey().compareTo(getKeyValPair(0).getKey()) < 0) {
 			index = 0;
 		} else if (teiler.getKey().compareTo(getKeyValPair(size() - 1).getKey()) > 0) {
-			index = size() - 1;
+			index = size();
 		} else {
 			for (int i = 0; i < size() - 1; i++) {
 				if (teiler.getKey().compareTo(getKeyValPair(i + 1).getKey()) < 0) {
@@ -268,11 +274,22 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	public String toString() {
 		String ergebnis = "(" + ((getChild(0) != null) ? " " + getChild(0) + " " : "") + ")";
 		for (int i = 0; i < keyValPairs.size(); i++) {
-			ergebnis += getKeyValPair(i).getKey() + "";
+			ergebnis += (getKeyValPair(i) == null ? "" : getKeyValPair(i).getKey()) + "";
+//			ergebnis += getKeyValPair(i).getKey() + "";
 			ergebnis += "(" + ((getChild(i + 1) != null) ? " " + getChild(i + 1) + " " : "") + ")";
 		}
 		ergebnis += "";
 		return ergebnis;
 	}
+	
+//	public String toString() {
+//		String ergebnis = "(" + ((!children.isEmpty()) ? " " + getChild(0) + " " : "") + ")";
+//		for (int i = 0; i < keyValPairs.size(); i++) {
+//			ergebnis += getKeyValPair(i).getKey() + "";
+//			ergebnis += "(" + ((!children.isEmpty()) ? " " + getChild(i + 1) + " " : "") + ")";
+//		}
+//		ergebnis += "";
+//		return ergebnis;
+//	}
 	
 }
