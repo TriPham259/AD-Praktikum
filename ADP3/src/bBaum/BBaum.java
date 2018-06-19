@@ -206,33 +206,33 @@ public class BBaum<K extends Comparable<K>, V> {
 		}
 	}
 
-	public static void main(String[] args) {
-		BBaum<Integer, String> baum = new BBaum<Integer, String>(2);
-
-		baum.insert(23, "23");
-		System.out.println(baum); 
-		System.out.println(baum.numOfKeys());
-		
-		baum.insert(42, "42");
-		System.out.println(baum);
-		System.out.println(baum.numOfKeys());
-		
-		System.out.println(baum.printPreOrder());
-		
-		baum.insert(12, "12");
-		System.out.println(baum);
-		System.out.println(baum.numOfKeys());
-		
-		baum.insert(25, "25");
-		System.out.println(baum);
-		
-		baum.insert(20, "20");
-		System.out.println(baum);
-		
-		baum.insert(11, "11");
-		System.out.println(baum);
-		
-		baum.insert(24, "24");
-		System.out.println(baum);
-	}
+//	public static void main(String[] args) {
+//		BBaum<Integer, String> baum = new BBaum<Integer, String>(2);
+//
+//		baum.insert(23, "23");
+//		System.out.println(baum); 
+//		System.out.println(baum.numOfKeys());
+//		
+//		baum.insert(42, "42");
+//		System.out.println(baum);
+//		System.out.println(baum.numOfKeys());
+//		
+//		System.out.println(baum.printPreOrder());
+//		
+//		baum.insert(12, "12");
+//		System.out.println(baum);
+//		System.out.println(baum.numOfKeys());
+//		
+//		baum.insert(25, "25");
+//		System.out.println(baum);
+//		
+//		baum.insert(20, "20");
+//		System.out.println(baum);
+//		
+//		baum.insert(11, "11");
+//		System.out.println(baum);
+//		
+//		baum.insert(24, "24");
+//		System.out.println(baum);
+//	}
 }

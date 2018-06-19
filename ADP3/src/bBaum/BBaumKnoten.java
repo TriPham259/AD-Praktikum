@@ -51,7 +51,6 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 			}
 		}
 		return true;
-//		return children.isEmpty();
 	}
 
 	/**
@@ -274,22 +273,12 @@ public class BBaumKnoten<K extends Comparable<K>, V> {
 	public String toString() {
 		String ergebnis = "(" + ((getChild(0) != null) ? " " + getChild(0) + " " : "") + ")";
 		for (int i = 0; i < keyValPairs.size(); i++) {
-			ergebnis += (getKeyValPair(i) == null ? "" : getKeyValPair(i).getKey()) + "";
-//			ergebnis += getKeyValPair(i).getKey() + "";
+			ergebnis += getKeyValPair(i).getKey() + "";
 			ergebnis += "(" + ((getChild(i + 1) != null) ? " " + getChild(i + 1) + " " : "") + ")";
 		}
 		ergebnis += "";
 		return ergebnis;
 	}
-	
-//	public String toString() {
-//		String ergebnis = "(" + ((!children.isEmpty()) ? " " + getChild(0) + " " : "") + ")";
-//		for (int i = 0; i < keyValPairs.size(); i++) {
-//			ergebnis += getKeyValPair(i).getKey() + "";
-//			ergebnis += "(" + ((!children.isEmpty()) ? " " + getChild(i + 1) + " " : "") + ")";
-//		}
-//		ergebnis += "";
-//		return ergebnis;
-//	}
+
 	
 }
